@@ -8,7 +8,7 @@ let sequelize
 
 if(process.env.NODE_ENV === 'production') {
   // Création de la base de donnée
-const sequelize = new Sequelize('rwq4tjzu0azbzbvj', 'clz9ah7uhguopy8g', 'ku6bjtrxoxh15t0p ', {
+sequelize = new Sequelize('rwq4tjzu0azbzbvj', 'clz9ah7uhguopy8g', 'ku6bjtrxoxh15t0p ', {
   host: 'q0h7yf5pynynaq54.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
   dialect: 'mariadb',
   dialectOptions: {
@@ -17,8 +17,7 @@ const sequelize = new Sequelize('rwq4tjzu0azbzbvj', 'clz9ah7uhguopy8g', 'ku6bjtr
   logging: false
 }) 
 } else {
-  // Création de la base de donnée
-  const sequelize = new Sequelize('pokedex', 'root', '', {
+  sequelize = new Sequelize('pokedex', 'root', '', {
     host: 'localhost',
     dialect: 'mariadb',
     dialectOptions: {
