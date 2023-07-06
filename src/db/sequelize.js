@@ -21,7 +21,7 @@ const User = UserModel(sequelize, DataTypes)
 
 // synchronisation du model pokemon avec la bdd
 const initDb = () => {
-  return sequelize.sync().then(_ => {
+  return sequelize.sync({force: true}).then(_ => {
     console.log('INIT DB')
     pokemons.map(pokemon => {
       Pokemon.create({
