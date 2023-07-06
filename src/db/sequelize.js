@@ -1,43 +1,37 @@
 const { Sequelize, DataTypes } = require('sequelize')
-const PokemonModel = require('../models/pokemons')
-const pokemons = require('./mock-pokemon')
-const UserModel = require('../models/user')
 const bcrypt = require('bcrypt')
+const PokemonModel = require('../models/pokemon')
+const UserModel = require('../models/user')
+const pokemons = require('./mock-pokemon')
 
 let sequelize
 
 if(process.env.NODE_ENV === 'production') {
-  // Création de la base de donnée
-sequelize = new Sequelize('rwq4tjzu0azbzbvj', 'clz9ah7uhguopy8g', 'ku6bjtrxoxh15t0p ', {
-  host: 'q0h7yf5pynynaq54.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
-  dialect: 'mariadb',
-  dialectOptions: {
-    timezone: 'Etc/GMT-2',
-  },
-  logging: false
-}) 
-} else {
-  sequelize = new Sequelize('pokedex', 'root', '', {
-    host: 'localhost',
+  sequelize = new Sequelize('kk8u5y871hfoaw9y', 't09tvm6qofrtvc7h', 'ryujse9ftf40wpqn', {
+    host: 'klbcedmmqp7w17ik.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
     dialect: 'mariadb',
     dialectOptions: {
       timezone: 'Etc/GMT-2',
     },
-    logging: false
-})
+    logging: true
+  })
+} else {
+  sequelize = new Sequelize('pokedex', 'username', 'password', {
+    host: '192.168.64.2',
+    dialect: 'mariadb',
+    dialectOptions: {
+      timezone: 'Etc/GMT-2',
+    },
+    logging: true
+  })
+  
 }
 
-
-
-// instance du model pokemon
 const Pokemon = PokemonModel(sequelize, DataTypes)
-// instance du model user
 const User = UserModel(sequelize, DataTypes)
 
-// synchronisation du model pokemon avec la bdd
 const initDb = () => {
   return sequelize.sync().then(_ => {
-    console.log('INIT DB')
     pokemons.map(pokemon => {
       Pokemon.create({
         name: pokemon.name,
@@ -45,20 +39,18 @@ const initDb = () => {
         cp: pokemon.cp,
         picture: pokemon.picture,
         types: pokemon.types
-      }).then(pokemon => console.log(pokemon.toJSON()))
+      })
+      .then(pokemon => console.log(pokemon.toJSON()))
     })
-    
-    bcrypt.hash('pikachu', 10)  // bcrypt.hash('mot de passe', temps d'encryption)
-    .then(hash => User.create({username: 'pikachu', password: hash})) // on recupere le mot de passe hashé on créer le user avec
-    .then(user => console.log(user.toJSON())) // on récupere le user, on l'affiche en JSON
+
+    bcrypt.hash('pikachu', 10)
+    .then(hash => User.create({ username: 'pikachu', password: hash }))
+    .then(user => console.log(user.toJSON()))
 
     console.log('La base de donnée a bien été initialisée !')
   })
 }
 
-
-  
-// export du module
 module.exports = { 
   initDb, Pokemon, User
 }
